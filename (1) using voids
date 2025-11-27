@@ -1,0 +1,103 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro; // Necessário para TextMeshPro
+
+public class Menu : MonoBehaviour
+{
+    public TextMeshProUGUI line1;
+    public TextMeshProUGUI line2;
+    public GameObject Index1; 
+    public GameObject Index2; 
+    public List<string> Main_menu; 
+
+    //Opções de nível 1
+    public List<string> Meter; 
+    public List<string> Events; 
+    public List<string> Targets; 
+    public List<string> Control; 
+    public List<string> SetShow; 
+    public List<string> Status; 
+    public List<string> Breaker;
+
+
+    public List<int> Order; 
+    public int x; //indica a opção da lista
+
+    void Start()
+    {
+        Main_menu = new List<string> { "**MAIN**", "Meter", "Events", "Targets", "Control", "Set/Show", "Status", "Breaker", "Quit" };
+        Meter = new List<string> {};
+        Events = new List<string> {};
+        Targets = new List<string> {};
+        Control =  new List<string> {};
+        SetShow =  new List<string> {};
+        Status = new List<string> {};
+        Breaker = new List<string> {};
+        Order = new List<int>{0,0,0,0,0};
+        x = 0;
+        Index2.SetActive(true);
+        Index1.SetActive(false);
+    }
+    void Update()
+    {
+        if(Order[0]==0) 
+        {
+            Main_menu1();
+        }
+    }
+
+    void Main_menu1()
+    {
+        
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray raio = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit info;
+            if (Physics.Raycast(raio, out info))
+            {
+                if (info.transform.CompareTag("buttonUP"))
+                {
+                    if (Index2.activeSelf) 
+                    {
+                        Index1.SetActive(true);  // Liga o de cima
+                        Index2.SetActive(false); // Desliga o de baixo
+                    }
+                    else
+                    {
+                        if (x == 0) // x é int, usa-se 0 e não 0f
+                        {
+                            x = Main_menu.Count - 2; // Vai para o final (ajuste conforme necessidade) (-2 pq o a posição inicial é zero)
+                        }
+                        else
+                        {
+                            x = x - 1;                        
+                        }
+                    }
+                }
+                
+                else if (info.transform.CompareTag("buttonDOWN"))
+                {
+                    if (Index1.activeSelf)
+                    {
+                        Index1.SetActive(false); // Desliga o de cima
+                        Index2.SetActive(true);  // Liga o de baixo
+                    }
+                    else
+                    {
+                        if (x >= Main_menu.Count - 2)
+                        {
+                            x = 0;
+                        }
+                        else    
+                        {
+                            x = x + 1;                        
+                        }
+                    }
+                }
+            }
+        } 
+        line1.text = Main_menu[x];
+        line2.text = Main_menu[x+1];  
+    } 
+}   
